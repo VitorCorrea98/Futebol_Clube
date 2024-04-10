@@ -13,7 +13,7 @@ chai.use(chaiHttp);
 
 const { expect } = chai;
 
-describe('Seu teste', () => {
+describe('Testing route /teams', () => {
   it('should return all teams', async function() {
     sinon.stub(SequelizeTeam, 'findAll').resolves(teamFindAll as any);
 
