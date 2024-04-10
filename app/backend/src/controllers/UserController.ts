@@ -14,10 +14,11 @@ export default class UserController {
   public async findByEmail(req: Request, res: Response) {
     const user = req.body as IUserLogin;
     const error = new Validate(user).Login() as unknown as ServiceResponseError;
+    console.log({ error });
     if (error) return res.status(mapStatusHTTP(error.status)).json(error.data);
 
     const { status, data } = await this.userService.findByEmail(user);
-
+    console.log({ status, data });
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }

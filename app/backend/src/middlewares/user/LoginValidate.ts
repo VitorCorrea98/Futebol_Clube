@@ -7,23 +7,20 @@ export default class Validate {
 
   public Login(): ServiceResponseError | null {
     const errorMessage = 'All fields must be filled';
+    const anotherErrorMessage = 'Invalid email or password';
     const userKeys = Joi.object({
-      password: Joi.string().min(6).required().messages({
-        'any.required': errorMessage,
+      password: Joi.string().min(6).required().messages({ 'any.required': errorMessage,
         'string.empty': errorMessage,
-      }),
-      email: Joi.string().email().required().messages({
-        'any.required': errorMessage,
+        'string.min': anotherErrorMessage }),
+      email: Joi.string().email().required().messages({ 'any.required': errorMessage,
         'string.empty': errorMessage,
-      }),
-    });
-
+        'string.email': anotherErrorMessage }) });
     const { error } = userKeys.validate(this._user);
-
     if (error) {
-      return { status: 'INVALID_DATA', data: { message: error?.message } };
+      const message = error.message.includes(errorMessage) ? 'INVALID_DATA' : 'INVALID_KEYS';
+      return {
+        status: message, data: { message: error?.message } };
     }
-
     return null;
   }
 }
