@@ -1,3 +1,5 @@
+const teamFindOne = {id: 1, teamName: 'Flu'}
+
 const teamFindAll = [
   {id: 1, teamName: 'Flu'},
   {id: 2, teamName: 'Fla'},
@@ -5,5 +7,6 @@ const teamFindAll = [
 ]
 
 export {
-  teamFindAll
+  teamFindAll,
+  teamFindOne
 }
