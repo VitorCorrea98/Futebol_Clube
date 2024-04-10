@@ -7,7 +7,6 @@ import { app } from '../app';
 import SequelizeTeam from '../database/models/SequelizeTeam'
 
 import {teamFindAll, teamFindOne} from './mocks/Teams.mock';
-import mapStatusHTTP from '../utils/mapStatusHTTP';
 
 
 chai.use(chaiHttp);

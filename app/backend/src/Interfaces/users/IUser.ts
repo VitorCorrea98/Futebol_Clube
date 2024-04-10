@@ -6,3 +6,8 @@ export interface IUser extends Identifiable {
   email: string;
   password: string;
 }
+
+export interface IUserLogin {
+  password: string;
+  email: string;
+}
