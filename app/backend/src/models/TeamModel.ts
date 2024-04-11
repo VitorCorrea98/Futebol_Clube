@@ -7,5 +7,5 @@ export default class TeamModel implements ITeamModel {
 
   async findAll(): Promise<ITeam[]> { return this.team.findAll(); }
 
-  async findById(id: number): Promise<ITeam | null> { return this.team.findOne({ where: { id } }); }
+  async findTeam(id: number): Promise<ITeam | null> { return this.team.findOne({ where: { id } }); }
 }

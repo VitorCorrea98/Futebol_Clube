@@ -1,11 +1,14 @@
 import { Request, Response } from 'express';
-import { IMatch } from '../Interfaces/matches/IMatch';
+import ExtractTeamId from '../utils/Match/ExtractTeamId';
+import { HomeAwayMatch, IMatch } from '../Interfaces/matches/IMatch';
 import MatchService from '../services/MatchService';
 import mapStatusHTTP from '../utils/mapStatusHTTP';
+import TeamService from '../services/TeamService';
 
 export default class MatchController {
   constructor(
     private matchService = new MatchService(),
+    private teamService = new TeamService(),
   ) {}
 
   public async findAllMatches(req: Request, res: Response) {
@@ -37,7 +40,23 @@ export default class MatchController {
   }
 
   public async insertMatch(req: Request, res: Response) {
-    const match = req.body;
+    const match = req.body as HomeAwayMatch;
+    const extract = new ExtractTeamId(match);
+
+    const sameTeam = match.awayTeamId === match.homeTeamId;
+    if (sameTeam) {
+      return res
+        .status(mapStatusHTTP('SAME_TEAM'))
+        .json({ message: 'It is not possible to create a match with two equal teams' });
+    }
+
+    const teamsId = extract.getIds();
+    const allTeams = await Promise.all(teamsId
+      .map(async (team) => this.teamService.findById(team)));
+    const someTeamDoesntExist = allTeams.find((team) => team.status === 'NOT_FOUND');
+    if (someTeamDoesntExist) {
+      return res.status(mapStatusHTTP(someTeamDoesntExist.status)).json(someTeamDoesntExist.data);
+    }
 
     const { status, data } = await this.matchService.insertMatch(match);
     return res.status(mapStatusHTTP(status)).json(data);

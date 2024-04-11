@@ -1,9 +1,10 @@
 import { HomeAwayMatch, HomeAwayTeamGoals, IMatch } from './matches/IMatch';
+import { ITeam } from './teams/ITeam';
 import { IUser } from './users/IUser';
 
 export interface ICRUDModelTeam<T> {
   findAll(): Promise<T[]>;
-  findById(id: number): Promise<T | null>;
+  findTeam(id: number): Promise<ITeam | null>;
 }
 
 export interface ICRUDModelUser<T> {
