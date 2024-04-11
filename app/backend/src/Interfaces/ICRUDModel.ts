@@ -10,4 +10,8 @@ export interface ICRUDModelUser<T> {
   findRole(user: IUser): Promise<T | null>
 }
 
+export interface ICRUDModelMatch<T> {
+  findAllMatches(): Promise<T[]>
+}
+
 export interface ICRUDModel<T> extends ICRUDModelTeam<T>, ICRUDModelUser<T> {}
