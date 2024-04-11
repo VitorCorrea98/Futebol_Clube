@@ -15,7 +15,6 @@ export default class UserService {
   }
 
   public async userLogin(user: IUserLogin): Promise<ServiceResponse<IUser>> {
-    console.log({ user });
     const userFound = await this
       .userModel.findByEmail(user.email) as unknown as { dataValues: IUser };
     if (!userFound || !compareSync(user.password, userFound.dataValues.password)) {
