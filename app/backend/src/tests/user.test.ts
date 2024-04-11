@@ -20,7 +20,6 @@ describe('Testing route /login', () => {
 
     const { email, password } = user
     const { status, body } = await chai.request(app).post('/login').send({email, password})
-
     expect(status).to.equal(200);
     expect(body).to.deep.equal(user);
   });
@@ -40,10 +39,9 @@ describe('Testing route /login', () => {
 
     const {email, password} = user
     const { status, body } = await chai.request(app).post('/login').send({email, password})
-
-    expect(status).to.equal(404);
+    expect(status).to.equal(401);
     expect(body).to.haveOwnProperty('message');
-    expect(body.message).to.be.equal('User not found')
+    expect(body.message).to.be.equal('Invalid email or password')
   });
  
   afterEach(sinon.restore);
