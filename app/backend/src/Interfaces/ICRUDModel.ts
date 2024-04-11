@@ -11,7 +11,8 @@ export interface ICRUDModelUser<T> {
 }
 
 export interface ICRUDModelMatch<T> {
-  findAllMatches(): Promise<T[]>
+  findAllMatches(): Promise<T[]>;
+  finishMatch(id: number): Promise<void>
 }
 
 export interface ICRUDModel<T> extends ICRUDModelTeam<T>, ICRUDModelUser<T> {}

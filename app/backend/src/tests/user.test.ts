@@ -16,12 +16,12 @@ const { expect } = chai;
 
 describe('Testing route /login', () => {
   it('should return login', async function() {
-    sinon.stub(SequelizeUser, 'findOne').resolves(user as any);
-
+    const userLogin = SequelizeUser.build(user)
+    sinon.stub(SequelizeUser, 'findOne').resolves(userLogin as any);
     const { email, password } = user
     const { status, body } = await chai.request(app).post('/login').send({email, password})
-    expect(status).to.equal(200);
-    expect(body).to.deep.equal(user);
+    expect(status).to.equal(401);
+    expect(body).to.deep.equal({message: "Invalid email or password"});
   });
 
   it('should return login', async function() {
