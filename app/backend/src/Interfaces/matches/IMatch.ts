@@ -12,3 +12,8 @@ export interface HomeAwayTeamGoals {
   homeTeamGoals: number;
   awayTeamGoals: number;
 }
+
+export interface HomeAwayMatch extends HomeAwayTeamGoals {
+  homeTeamId: number;
+  awayTeamId: number;
+}

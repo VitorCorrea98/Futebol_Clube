@@ -1,4 +1,4 @@
-import { HomeAwayTeamGoals, IMatch } from '../Interfaces/matches/IMatch';
+import { HomeAwayMatch, HomeAwayTeamGoals, IMatch } from '../Interfaces/matches/IMatch';
 import SequelizeMatch from '../database/models/SequelizeMatches';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import SequelizeTeam from '../database/models/SequelizeTeam';
@@ -26,5 +26,10 @@ export default class MatchModel implements IMatchModel {
         homeTeamGoals: goals.homeTeamGoals,
         awayTeamGoals: goals.awayTeamGoals,
       }, { where: { id } });
+  }
+
+  async insertMatch(match: HomeAwayMatch): Promise<IMatch> {
+    const newMatch = await this.match.create({ ...match, inProgress: true });
+    return newMatch.dataValues;
   }
 }

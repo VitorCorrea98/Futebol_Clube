@@ -19,4 +19,10 @@ router.patch(
   (req: Request, res: Response) => matchController.updateMatch(req, res),
 );
 
+router.post(
+  '/',
+  (req: Request, res: Response, next: NextFunction) => authToken.verifyToken(req, res, next),
+  (req: Request, res: Response) => matchController.insertMatch(req, res),
+);
+
 export default router;
