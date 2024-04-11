@@ -1,4 +1,4 @@
-import { IMatch } from '../Interfaces/matches/IMatch';
+import { HomeAwayTeamGoals, IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import MatchModel from '../models/MatchModel';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
@@ -16,5 +16,10 @@ export default class MatchService {
   public async finishMatch(id: number): Promise<ServiceResponse<{ message: string }>> {
     await this.matchModel.finishMatch(id);
     return { status: 'SUCCESSFUL', data: { message: 'Finished' } };
+  }
+
+  public async updateMatch(goals: HomeAwayTeamGoals, id: number): Promise<ServiceResponse<null>> {
+    await this.matchModel.updateMatch(goals, id);
+    return { status: 'SUCCESSFUL', data: null };
   }
 }

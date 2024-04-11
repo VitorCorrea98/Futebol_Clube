@@ -24,7 +24,7 @@ export default class TokenAuth {
       if (!user) {
         return res.status(404).json({ message: 'User does not exist' });
       }
-      req.body = user.dataValues;
+      req.cookies = user.dataValues;
       return next();
     } catch (err) {
       return res.status(401).json({ message: 'Token must be a valid token' });

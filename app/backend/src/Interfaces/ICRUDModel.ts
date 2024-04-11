@@ -1,3 +1,4 @@
+import { HomeAwayTeamGoals } from './matches/IMatch';
 import { IUser } from './users/IUser';
 
 export interface ICRUDModelTeam<T> {
@@ -12,7 +13,8 @@ export interface ICRUDModelUser<T> {
 
 export interface ICRUDModelMatch<T> {
   findAllMatches(): Promise<T[]>;
-  finishMatch(id: number): Promise<void>
+  finishMatch(id: number): Promise<void>;
+  updateMatch(goals: HomeAwayTeamGoals, id: number): Promise<void>;
 }
 
 export interface ICRUDModel<T> extends ICRUDModelTeam<T>, ICRUDModelUser<T> {}
