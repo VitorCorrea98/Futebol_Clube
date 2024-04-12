@@ -5,7 +5,6 @@ function errorMiddleware(error: ICustomError, _req: Request, res: Response, _nex
   const status = error.statusCode || 500;
   const message = error.message || 'Something went wrong';
 
-  console.log(error);
   return res.status(status).json({ message });
 }
 

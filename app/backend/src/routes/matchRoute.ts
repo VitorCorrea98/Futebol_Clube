@@ -8,6 +8,7 @@ const authToken = new TokenAuth();
 const router = Router();
 
 router.get('/', (req: Request, res: Response) => matchController.findAllMatches(req, res));
+
 router.patch(
   '/:id/finish',
   (req: Request, res: Response, next: NextFunction) => authToken.verifyToken(req, res, next),

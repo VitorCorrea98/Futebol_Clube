@@ -16,9 +16,9 @@ export default class MatchController {
     const { status, data } = await this.matchService.findAllMatches();
     if (filter && filter.inProgress) {
       const allMatches = data as unknown as { dataValues: IMatch }[];
-      const toFilterActiveMatches = filter.inProgress.includes('true');
+      const toFilterMatches = filter.inProgress.includes('true');
       const filteredMatches = allMatches
-        .filter((match) => match.dataValues.inProgress === toFilterActiveMatches);
+        .filter((match) => match.dataValues.inProgress === toFilterMatches);
       console.log({ filteredMatches });
       return res.status(mapStatusHTTP(status)).json(filteredMatches);
     }
@@ -34,7 +34,6 @@ export default class MatchController {
   public async updateMatch(req: Request, res: Response) {
     const { id } = req.params;
     const goals = req.body;
-    console.log({ goals, id });
     const { status } = await this.matchService.updateMatch(goals, Number(id));
     return res.status(mapStatusHTTP(status)).json({ message: 'Updated' });
   }
@@ -53,12 +52,18 @@ export default class MatchController {
     const teamsId = extract.getIds();
     const allTeams = await Promise.all(teamsId
       .map(async (team) => this.teamService.findById(team)));
+
     const someTeamDoesntExist = allTeams.find((team) => team.status === 'NOT_FOUND');
     if (someTeamDoesntExist) {
       return res.status(mapStatusHTTP(someTeamDoesntExist.status)).json(someTeamDoesntExist.data);
     }
 
     const { status, data } = await this.matchService.insertMatch(match);
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
+
+  public async getLeadboard(_req: Request, res: Response) {
+    const { status, data } = await this.matchService.getLeadboard();
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }

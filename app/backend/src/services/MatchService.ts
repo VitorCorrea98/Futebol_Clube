@@ -1,4 +1,7 @@
-import { HomeAwayMatch, HomeAwayTeamGoals, IMatch } from '../Interfaces/matches/IMatch';
+import Leadboard from '../utils/Match/GetHomeAwayMatches';
+import { HomeAwayMatch,
+  HomeAwayTeamGoals,
+  ILeadboard, IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import MatchModel from '../models/MatchModel';
 import { ServiceResponse } from '../Interfaces/ServiceResponse';
@@ -26,5 +29,11 @@ export default class MatchService {
   public async insertMatch(match: HomeAwayMatch): Promise<ServiceResponse<IMatch>> {
     const newMatch = await this.matchModel.insertMatch(match);
     return { status: 'CREATED', data: newMatch };
+  }
+
+  public async getLeadboard(): Promise<ServiceResponse<ILeadboard[]>> {
+    const allMatches = await this.matchModel.findAllMatches();
+    const leadboard = new Leadboard(allMatches).leadboardFormat();
+    return { status: 'SUCCESSFUL', data: leadboard };
   }
 }

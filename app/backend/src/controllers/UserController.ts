@@ -28,7 +28,6 @@ export default class UserController {
   public async getUserRole(req: Request, res: Response) {
     const user = req.cookies as unknown as IUser;
     const { status, data } = await this.userService.getUserRole(user);
-    console.log({ user, status, data });
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }

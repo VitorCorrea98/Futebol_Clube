@@ -1,5 +1,6 @@
 import * as sinon from 'sinon';
 import * as chai from 'chai';
+import * as JWT from 'jsonwebtoken'
 // @ts-ignore
 import chaiHttp = require('chai-http');
 
@@ -35,10 +36,14 @@ describe('Testing route /login', () => {
   });
 
   it('should return login', async function() {
-    sinon.stub(SequelizeUser, 'findOne').resolves(null);
+    sinon.stub(SequelizeUser, 'findOne').resolves(user as any);
+    sinon.stub(JWT, 'verify').resolves({data: {email :'vitor@correa.com'}});
 
     const {email, password} = user
-    const { status, body } = await chai.request(app).post('/login').send({email, password})
+    const { status, body } = await chai.request(app).post('/login')
+    .set('authorization', 'Bearer validToken')
+    .send({email, password})
+    
     expect(status).to.equal(401);
     expect(body).to.haveOwnProperty('message');
     expect(body.message).to.be.equal('Invalid email or password')

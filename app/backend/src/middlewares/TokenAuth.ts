@@ -18,7 +18,7 @@ export default class TokenAuth {
     const token = bearerToken.split(' ')[1];
     try {
       const secret = 'jwtSecret';
-      const decoded = jwt.verify(token, secret) as { data: { email: string } };
+      const decoded = await jwt.verify(token, secret) as { data: { email: string } };
       const user = await this
         .userService.findByEmail(decoded.data.email) as unknown as { dataValues: IUser };
       if (!user) {
