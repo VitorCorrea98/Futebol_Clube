@@ -33,9 +33,9 @@ export default class Leadboard {
 
   public leadboardFormat() {
     const allMatches = this.getHomeAway()[this.leaderBoardSide as 'homeGames' | 'awayGames'];
-    const { allTeams } = this;
-    const resultMatches = allTeams.map((match) => {
-      const results = allMatches.reduce((acc, curr): ILeadboard => {
+    const teste = allMatches || [...this.getHomeAway().awayGames, ...this.getHomeAway().homeGames];
+    const resultMatches = this.allTeams.map((match) => {
+      const results = teste.reduce((acc, curr): ILeadboard => {
         if (curr.name === match) {
           return ({
             name: match,

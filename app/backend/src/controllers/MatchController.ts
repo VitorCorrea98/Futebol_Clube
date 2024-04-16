@@ -62,12 +62,17 @@ export default class MatchController {
   }
 
   public async getLeadboardHome(_req: Request, res: Response) {
-    const { status, data } = await this.matchService.getLeaderboardHome('homeGames');
+    const { status, data } = await this.matchService.getLeaderboardHomeAway('homeGames');
     return res.status(mapStatusHTTP(status)).json(data);
   }
 
   public async getLeadboardAway(_req: Request, res: Response) {
-    const { status, data } = await this.matchService.getLeaderboardHome('awayGames');
+    const { status, data } = await this.matchService.getLeaderboardHomeAway('awayGames');
+    return res.status(mapStatusHTTP(status)).json(data);
+  }
+
+  public async getLeadboardAll(_req: Request, res: Response) {
+    const { status, data } = await this.matchService.getLeaderboardAll();
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }
