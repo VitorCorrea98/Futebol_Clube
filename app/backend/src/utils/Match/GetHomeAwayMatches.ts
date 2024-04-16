@@ -45,8 +45,7 @@ export default class Leadboard {
             totalDraws: acc.totalDraws + curr.draw,
             totalLosses: acc.totalLosses + curr.lose,
             goalsFavor: acc.goalsFavor + curr.favorGoals,
-            goalsOwn: acc.goalsOwn + curr.againstGoals,
-          });
+            goalsOwn: acc.goalsOwn + curr.againstGoals });
         } return acc;
       }, matchLeadbordInicialValues); return results;
     }); return resultMatches;
@@ -60,16 +59,7 @@ export default class Leadboard {
         goalsBalance: curr.goalsFavor - curr.goalsOwn,
         efficiency: (((curr.totalPoints) / (curr.totalGames * 3)) * 100).toFixed(2),
       }; return [...acc, newKeys];
-    }, [] as IBalanceEfficiency[]).sort((a, b) => {
-      if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
-      if (a.totalPoints === b.totalPoints
-        && b.totalVictories !== a.totalVictories) return b.totalVictories - a.totalVictories;
-      if (a.totalVictories === b.totalVictories
-        && b.goalsBalance !== a.goalsBalance) return b.goalsBalance - a.goalsBalance;
-      if (a.goalsBalance === b.goalsBalance
-        && b.goalsFavor !== a.goalsFavor) return b.goalsFavor - a.goalsFavor;
-      return 0;
-    });
+    }, [] as IBalanceEfficiency[]);
     return result;
   }
 }

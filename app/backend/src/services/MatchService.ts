@@ -33,12 +33,22 @@ export default class MatchService {
     return { status: 'CREATED', data: newMatch };
   }
 
-  public async getLeaderboardHome(): Promise<ServiceResponse<ILeadboard[]>> {
+  public async getLeaderboardHome(side: 'homeGames' | 'awayGames'):
+  Promise<ServiceResponse<ILeadboard[]>> {
     const allMatches = await this.matchModel.findAllMatches();
     const allTeams = await new TeamModel().findAll() as unknown as { dataValues: ITeam }[];
     const allTeamsNames = allTeams.map((item) => item.dataValues.teamName);
-    const leadboard = new Leadboard(allMatches, allTeamsNames, 'homeGames')
-      .LeaderBoardGoalsBalanceEfficiencyAdded();
+    const leadboard = new Leadboard(allMatches, allTeamsNames, side)
+      .LeaderBoardGoalsBalanceEfficiencyAdded().sort((a, b) => {
+        if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
+        if (a.totalPoints === b.totalPoints
+          && b.totalVictories !== a.totalVictories) return b.totalVictories - a.totalVictories;
+        if (a.totalVictories === b.totalVictories
+          && b.goalsBalance !== a.goalsBalance) return b.goalsBalance - a.goalsBalance;
+        if (a.goalsBalance === b.goalsBalance
+          && b.goalsFavor !== a.goalsFavor) return b.goalsFavor - a.goalsFavor;
+        return 0;
+      });
 
     return { status: 'SUCCESSFUL', data: leadboard };
   }
