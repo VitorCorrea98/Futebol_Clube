@@ -1,6 +1,7 @@
 import { HomeAwayModifiedLeadbord,
   IBalanceEfficiency,
   ILeadboard, IMatch, matchLeadbordInicialValues } from '../../Interfaces/matches/IMatch';
+import SortedLeaderboard from './SortedLeaderboard';
 
 export default class Leadboard {
   constructor(
@@ -60,6 +61,7 @@ export default class Leadboard {
         efficiency: (((curr.totalPoints) / (curr.totalGames * 3)) * 100).toFixed(2),
       }; return [...acc, newKeys];
     }, [] as IBalanceEfficiency[]);
-    return result;
+    const resultSorted = new SortedLeaderboard(result).sort();
+    return resultSorted;
   }
 }

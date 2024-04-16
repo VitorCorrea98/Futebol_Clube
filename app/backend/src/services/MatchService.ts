@@ -1,10 +1,8 @@
-import LeadboardAll from '../utils/Match/GetAllLeaderboard';
 import { ITeam } from '../Interfaces/teams/ITeam';
 import TeamModel from '../models/TeamModel';
 import Leadboard from '../utils/Match/GetHomeAwayMatches';
 import { HomeAwayMatch,
   HomeAwayTeamGoals,
-  IBalanceEfficiency,
   ILeadboard, IMatch } from '../Interfaces/matches/IMatch';
 import { IMatchModel } from '../Interfaces/matches/IMatchModel';
 import MatchModel from '../models/MatchModel';
@@ -35,32 +33,12 @@ export default class MatchService {
     return { status: 'CREATED', data: newMatch };
   }
 
-  public async getLeaderboardHomeAway(side: 'homeGames' | 'awayGames'):
+  public async getLeaderboardHomeAway(side?: 'homeGames' | 'awayGames'):
   Promise<ServiceResponse<ILeadboard[]>> {
     const allMatches = await this.matchModel.findAllMatches();
     const allTeams = await new TeamModel().findAll() as unknown as { dataValues: ITeam }[];
     const allTeamsNames = allTeams.map((item) => item.dataValues.teamName);
     const leadboard = new Leadboard(allMatches, allTeamsNames, side)
-      .LeaderBoardGoalsBalanceEfficiencyAdded().sort((a, b) => {
-        if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
-        if (a.totalPoints === b.totalPoints
-          && b.totalVictories !== a.totalVictories) return b.totalVictories - a.totalVictories;
-        if (a.totalVictories === b.totalVictories
-          && b.goalsBalance !== a.goalsBalance) return b.goalsBalance - a.goalsBalance;
-        if (a.goalsBalance === b.goalsBalance
-          && b.goalsFavor !== a.goalsFavor) return b.goalsFavor - a.goalsFavor;
-        return 0;
-      });
-
-    return { status: 'SUCCESSFUL', data: leadboard };
-  }
-
-  public async getLeaderboardAll():
-  Promise<ServiceResponse<IBalanceEfficiency[]>> {
-    const allMatches = await this.matchModel.findAllMatches();
-    const allTeams = await new TeamModel().findAll() as unknown as { dataValues: ITeam }[];
-    const allTeamsNames = allTeams.map((item) => item.dataValues.teamName);
-    const leadboard = new LeadboardAll(allMatches, allTeamsNames)
       .LeaderBoardGoalsBalanceEfficiencyAdded();
 
     return { status: 'SUCCESSFUL', data: leadboard };
