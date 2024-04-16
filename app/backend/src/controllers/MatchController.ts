@@ -19,7 +19,6 @@ export default class MatchController {
       const toFilterMatches = filter.inProgress.includes('true');
       const filteredMatches = allMatches
         .filter((match) => match.dataValues.inProgress === toFilterMatches);
-      console.log({ filteredMatches });
       return res.status(mapStatusHTTP(status)).json(filteredMatches);
     }
     return res.status(mapStatusHTTP(status)).json(data);
@@ -62,8 +61,8 @@ export default class MatchController {
     return res.status(mapStatusHTTP(status)).json(data);
   }
 
-  public async getLeadboard(_req: Request, res: Response) {
-    const { status, data } = await this.matchService.getLeadboard();
+  public async getLeadboardHome(_req: Request, res: Response) {
+    const { status, data } = await this.matchService.getLeaderboardHome();
     return res.status(mapStatusHTTP(status)).json(data);
   }
 }

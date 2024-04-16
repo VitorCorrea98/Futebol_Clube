@@ -44,6 +44,11 @@ export interface ILeadboard {
   goalsOwn: number;
 }
 
+export interface IBalanceEfficiency extends ILeadboard {
+  goalsBalance: number;
+  efficiency: string
+}
+
 export const matchLeadbordInicialValues: ILeadboard = {
   name: '',
   totalPoints: 0,

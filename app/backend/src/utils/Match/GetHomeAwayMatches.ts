@@ -1,40 +1,44 @@
 import { HomeAwayModifiedLeadbord,
+  IBalanceEfficiency,
   ILeadboard, IMatch, matchLeadbordInicialValues } from '../../Interfaces/matches/IMatch';
 
 export default class Leadboard {
   constructor(
     private matches: IMatch[],
+    private allTeams: string[],
+    private leaderBoardSide?: 'homeGames' | 'awayGames',
   ) {}
 
   public getHomeAway() {
-    const homeGames = this.matches.filter((match) => match.inProgress === false)
-      .map((match) => ({
-        name: match.homeTeam?.teamName,
-        againstGoals: match.homeTeamGoals,
-        favorGoals: match.awayTeamGoals,
-        win: match.homeTeamGoals > match.awayTeamGoals ? 1 : 0,
-        draw: match.homeTeamGoals === match.awayTeamGoals ? 1 : 0,
-        lose: match.homeTeamGoals < match.awayTeamGoals ? 1 : 0,
-      })) as HomeAwayModifiedLeadbord[];
-
-    const awayGames = this.matches.filter((match) => match.inProgress === false).map((match) => ({
-      name: match.awayTeam?.teamName,
-      againstGoals: match.homeTeamGoals,
-      favorGoals: match.awayTeamGoals,
+    const homeGames = this.matches.filter((match) => match.inProgress === false).map((match) => ({
+      name: match.homeTeam?.teamName,
+      againstGoals: match.awayTeamGoals,
+      favorGoals: match.homeTeamGoals,
       win: match.homeTeamGoals > match.awayTeamGoals ? 1 : 0,
       draw: match.homeTeamGoals === match.awayTeamGoals ? 1 : 0,
       lose: match.homeTeamGoals < match.awayTeamGoals ? 1 : 0,
     })) as HomeAwayModifiedLeadbord[];
-    return [...homeGames, ...awayGames];
+
+    const awayGames = this.matches.filter((match) => match.inProgress === false)
+      .map((match) => ({
+        name: match.awayTeam?.teamName,
+        againstGoals: match.homeTeamGoals,
+        favorGoals: match.awayTeamGoals,
+        win: match.awayTeamGoals > match.homeTeamGoals ? 1 : 0,
+        draw: match.awayTeamGoals === match.homeTeamGoals ? 1 : 0,
+        lose: match.awayTeamGoals < match.homeTeamGoals ? 1 : 0,
+      })) as HomeAwayModifiedLeadbord[];
+    return { homeGames, awayGames };
   }
 
   public leadboardFormat() {
-    const allMatches = this.getHomeAway();
-    const resultMatches = allMatches.map((match) => {
+    const allMatches = this.getHomeAway()[this.leaderBoardSide as 'homeGames' | 'awayGames'];
+    const { allTeams } = this;
+    const resultMatches = allTeams.map((match) => {
       const results = allMatches.reduce((acc, curr): ILeadboard => {
-        if (curr.name === match.name) {
+        if (curr.name === match) {
           return ({
-            name: match.name,
+            name: match,
             totalPoints: acc.totalPoints + (curr.win ? 3 : 0) + (curr.draw ? 1 : 0),
             totalGames: acc.totalGames + 1,
             totalVictories: acc.totalVictories + curr.win,
@@ -46,5 +50,26 @@ export default class Leadboard {
         } return acc;
       }, matchLeadbordInicialValues); return results;
     }); return resultMatches;
+  }
+
+  public LeaderBoardGoalsBalanceEfficiencyAdded() {
+    const leaderBoard = this.leadboardFormat() as unknown as ILeadboard[];
+    const result = leaderBoard.reduce((acc, curr): IBalanceEfficiency[] => {
+      const newKeys: IBalanceEfficiency = {
+        ...curr,
+        goalsBalance: curr.goalsFavor - curr.goalsOwn,
+        efficiency: (((curr.totalPoints) / (curr.totalGames * 3)) * 100).toFixed(2),
+      }; return [...acc, newKeys];
+    }, [] as IBalanceEfficiency[]).sort((a, b) => {
+      if (a.totalPoints !== b.totalPoints) return b.totalPoints - a.totalPoints;
+      if (a.totalPoints === b.totalPoints
+        && b.totalVictories !== a.totalVictories) return b.totalVictories - a.totalVictories;
+      if (a.totalVictories === b.totalVictories
+        && b.goalsBalance !== a.goalsBalance) return b.goalsBalance - a.goalsBalance;
+      if (a.goalsBalance === b.goalsBalance
+        && b.goalsFavor !== a.goalsFavor) return b.goalsFavor - a.goalsFavor;
+      return 0;
+    });
+    return result;
   }
 }

@@ -1,3 +1,5 @@
+import { ITeam } from '../Interfaces/teams/ITeam';
+import TeamModel from '../models/TeamModel';
 import Leadboard from '../utils/Match/GetHomeAwayMatches';
 import { HomeAwayMatch,
   HomeAwayTeamGoals,
@@ -31,9 +33,13 @@ export default class MatchService {
     return { status: 'CREATED', data: newMatch };
   }
 
-  public async getLeadboard(): Promise<ServiceResponse<ILeadboard[]>> {
+  public async getLeaderboardHome(): Promise<ServiceResponse<ILeadboard[]>> {
     const allMatches = await this.matchModel.findAllMatches();
-    const leadboard = new Leadboard(allMatches).leadboardFormat();
+    const allTeams = await new TeamModel().findAll() as unknown as { dataValues: ITeam }[];
+    const allTeamsNames = allTeams.map((item) => item.dataValues.teamName);
+    const leadboard = new Leadboard(allMatches, allTeamsNames, 'homeGames')
+      .LeaderBoardGoalsBalanceEfficiencyAdded();
+
     return { status: 'SUCCESSFUL', data: leadboard };
   }
 }
