@@ -3,7 +3,7 @@ import { HomeAwayModifiedLeadbord,
   ILeadboard, IMatch, matchLeadbordInicialValues } from '../../Interfaces/matches/IMatch';
 import SortedLeaderboard from './SortedLeaderboard';
 
-export default class Leadboard {
+export default class Leaderboard {
   constructor(
     private matches: IMatch[],
     private allTeams: string[],
